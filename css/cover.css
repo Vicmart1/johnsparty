@@ -45,7 +45,7 @@ body {
   height: 100%;
   background-image: url("https://blogs.hopkins-interactive.com/lucie/files/Gilman-close.jpeg");
   background-postion: center top;
-  background-size: 100%;
+  background-size: cover;
   background-repeat: no-repeat;
   /*background-color: #333;*/
 }
