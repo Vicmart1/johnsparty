@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#the_header').addClass('animated infinite bounce');
+    //$('#the_header').addClass('animated infinite bounce');
 });
 $("input").click(function(e){
     var idClicked = e.target.id;
