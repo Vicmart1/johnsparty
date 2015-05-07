@@ -19,6 +19,10 @@ a:hover {
   border: 1px solid #fff;
 }
 
+.btn{
+    margin:5px;
+}
+
 .left {
     background-color: #66B2FF;
     border: 1px solid #66B2FF;
