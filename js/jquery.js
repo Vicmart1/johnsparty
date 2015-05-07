@@ -10,8 +10,13 @@ var sayThankYou = function () {
     $('#the_body').html('Thank you for your input.');
     $('#the_body').removeClass('animated fadeOut');
     $('#the_body').addClass('animated fadeIn');
+    $('#right_button').remove();
+    $('#left_button').html('Refresh Page');
+    jQuery('#left_button').unbind('click');
+    jQuery('#left_button').click(function(){
+                        location.reload();
+                        });
 }
-
 
 $('#left_button').click(function() {
                         $('#the_header').addClass('animated fadeOut');
