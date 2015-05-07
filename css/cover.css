@@ -19,6 +19,22 @@ a:hover {
   border: 1px solid #fff;
 }
 
+.left {
+    background-color: #66B2FF;
+    border: 1px solid #66B2FF;
+    width: 200px;
+}
+
+.left:hover {
+    background-color: #3399FF;
+    border: 1px solid #3399FF;
+}
+
+.right {
+    background-color: #E0E0E0;
+    border: 1px solid #E0E0E0;
+    width: 200px;
+}
 
 /*
  * Base structure
