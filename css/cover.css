@@ -40,6 +40,9 @@ a:hover {
     width: 200px;
 }
 
+.site-wrapper {
+    margin: 0 auto;
+}
 
 /*
  * Base structure
