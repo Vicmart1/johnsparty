@@ -21,6 +21,7 @@ var sayThankYou = function (result) {
     
     var GameScore = Parse.Object.extend("Result");
     var query = new Parse.Query(GameScore);
+    query.limit(1000);
     //query.equalTo("playerName", "Dan Stemkoski");
     query.find({
                success: function(results) {
@@ -30,6 +31,7 @@ var sayThankYou = function (result) {
                var left = 0;
                var right = 0;
                
+               alert(results.length);
                for (var i = 0; i < results.length; i++) {
                 var object = results[i];
                if(object.get('score')) {
