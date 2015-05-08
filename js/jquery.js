@@ -9,15 +9,45 @@ $("input").click(function(e){
 });
 
 var sayThankYou = function (result) {
-    $('#the_body').html('Thank you for your input.');
     $('#the_body').removeClass('animated fadeOut');
     $('#the_body').addClass('animated fadeIn');
     $('#right_button').remove();
     $('#left_button').html('Refresh Page');
+    
     jQuery('#left_button').unbind('click');
     var TestObject = Parse.Object.extend("Result");
     var testObject = new TestObject();
-    testObject.save({foo: result}).then(function(object) { });
+    testObject.save({score: result}).then(function(object) { });
+    
+    var GameScore = Parse.Object.extend("Result");
+    var query = new Parse.Query(GameScore);
+    //query.equalTo("playerName", "Dan Stemkoski");
+    query.find({
+               success: function(results) {
+               //alert("Successfully retrieved " + results.length + " scores.");
+               // Do something with the returned Parse.Object values
+               
+               var left = 0;
+               var right = 0;
+               
+               for (var i = 0; i < results.length; i++) {
+                var object = results[i];
+               if(object.get('score')) {
+                    if(object.get('score') == 1) {
+                        left++;
+                    } else {
+                        right++;
+                    }
+               }
+               }
+               $('#the_body').html('Thank you for your input. The score is currently ' + left + '-' + right);
+               
+               },
+               error: function(error) {
+               alert("Error: " + error.code + " " + error.message);
+               }
+               });
+    
     jQuery('#left_button').click(function(){
                         location.reload();
                         });
