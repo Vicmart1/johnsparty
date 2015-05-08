@@ -31,7 +31,6 @@ var sayThankYou = function (result) {
                var left = 0;
                var right = 0;
                
-               alert(results.length);
                for (var i = 0; i < results.length; i++) {
                 var object = results[i];
                if(object.get('score')) {
