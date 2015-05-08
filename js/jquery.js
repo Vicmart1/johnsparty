@@ -1,8 +1,5 @@
 $(document).ready(function() {
                   Parse.initialize("88lDbflAf4cF2dTqDwFHkv6N6EG6WtDXY0YVT2lR", "YIPG0FJNlDrGcG5EaKdXHe74xQNGASrem08Pr6to");
-                  var TestObject = Parse.Object.extend("TestObject");
-                  var testObject = new TestObject();
-                  testObject.save({foo: "far"}).then(function(object) { });
 });
 $("input").click(function(e){
     var idClicked = e.target.id;
@@ -19,17 +16,25 @@ var sayThankYou = function (result) {
     var testObject = new TestObject();
     testObject.save({score: result}).then(function(object) { });
     
+    $( "<canvas id='myChart' width='400' height='400'></canvas>" ).appendTo( "#cover" );
+    
+    // Get context with jQuery - using jQuery's .get() method.
+    var ctx = $("#myChart").get(0).getContext("2d");
+    // This will get the first returned node in the jQuery collection.
+    var myNewChart = new Chart(ctx);
+    
     var GameScore = Parse.Object.extend("Result");
     var query = new Parse.Query(GameScore);
     query.limit(1000);
     //query.equalTo("playerName", "Dan Stemkoski");
+    var left = 0;
+    var right = 0;
+    
+    
     query.find({
                success: function(results) {
                //alert("Successfully retrieved " + results.length + " scores.");
                // Do something with the returned Parse.Object values
-               
-               var left = 0;
-               var right = 0;
                
                for (var i = 0; i < results.length; i++) {
                 var object = results[i];
@@ -41,13 +46,31 @@ var sayThankYou = function (result) {
                     }
                }
                }
-               $('#the_body').html('Thank you for your input. The score is currently ' + left + '-' + right);
+               $('#the_body').html('Thank you for your input. This is what fellow students think about the matter.');
+               
+               var data = [
+                           {
+                           value: right,
+                           color: "#E0E0E0",
+                           highlight: "#FFFFFF",
+                           label: "Right Shark"
+                           },
+                           {
+                           value: left,
+                           color:"#66B2FF",
+                           highlight: "#3399FF",
+                           label: "Left Shark"
+                           }
+                           ]
+               // For a pie chart
+               var myPieChart = new Chart(ctx).Pie(data);
                
                },
                error: function(error) {
                alert("Error: " + error.code + " " + error.message);
                }
                });
+    
     
     jQuery('#left_button').click(function(){
                         location.reload();
