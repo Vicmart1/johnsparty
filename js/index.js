@@ -37,9 +37,9 @@ var sayThankYou = function (result, num) {
     testObject.save({score: String(result)}).then(function(object) { });
     
 	var radius = 0;
-	radius = Math.max(window.innerWidth, window.innerHeight)/3;
+	radius = Math.max(parseInt($(".cover-container").css("width")), parseInt($(".cover-container").css("height")))/2;
 
-    $( "<canvas id='myChart"+num+"' width='" + radius + "' height='" + radius + "'></canvas>" ).appendTo( "#question"+num );
+    $( "<canvas id='myChart"+num+"' width='" + radius + "' height='" + radius + "'></canvas>" ).appendTo( "#container"+num );
     
     // Get context with jQuery - using jQuery's .get() method.
     var ctx = $("#myChart"+num).get(0).getContext("2d");

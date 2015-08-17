@@ -139,7 +139,7 @@ body {
   border-bottom-color: #fff;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 700px) {
   .masthead-brand {
     float: left;
   }
@@ -204,4 +204,8 @@ body {
   .cover-container {
     width: 700px;
   }
+}
+
+.question{
+	width: 100%;
 }
