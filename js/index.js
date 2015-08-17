@@ -36,7 +36,9 @@ var sayThankYou = function (result, num) {
     var testObject = new TestObject();
     testObject.save({score: String(result)}).then(function(object) { });
     
-    $( "<canvas id='myChart"+num+"' width='400' height='400'></canvas>" ).appendTo( "#question"+num );
+	var radius = window.innerWidth/3;
+	
+    $( "<canvas id='myChart"+num+"' width='" + radius + "' height='" + radius + "'></canvas>" ).appendTo( "#question"+num );
     
     // Get context with jQuery - using jQuery's .get() method.
     var ctx = $("#myChart"+num).get(0).getContext("2d");
