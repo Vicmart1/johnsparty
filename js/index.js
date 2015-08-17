@@ -14,8 +14,8 @@ var createButton = function(element, where, position, num) {
 	else
 		position_string = "right";	
 	$(document).on('click','#' + position_string + '_button' + num , function() {
-                        $('#the_header').addClass('animated fadeOut');
-                        $('#the_body').addClass('animated fadeOut');
+                        $('#the_header').html("Thank you.");
+                        //$('#the_body').addClass('animated fadeOut');
                         $('#the_body').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', sayThankYou(position,num));
 	});
 }
@@ -25,7 +25,8 @@ $("input").click(function(e){
 });
 
 var sayThankYou = function (result, num) {
-    $('#the_body').removeClass('animated fadeOut');
+    //$('#the_body').removeClass('animated fadeOut');
+    $('#the_header').addClass('animated fadeIn');
     $('#the_body').addClass('animated fadeIn');
     $('#right_button'+num).remove();
 	$('#left_button'+num).remove();
@@ -40,6 +41,9 @@ var sayThankYou = function (result, num) {
 	radius = Math.max(parseInt($(".cover-container").css("width")), parseInt($(".cover-container").css("height")))/2;
 
     $( "<canvas id='myChart"+num+"' width='" + radius + "' height='" + radius + "'></canvas>" ).appendTo( "#container"+num );
+    $( "<div class='textarea alpha60' contenteditable>I look like a textarea</div>" ).appendTo( "#container"+num );
+    //$( "<div class='text-bg'></div>" ).appendTo( "#txtDiv" );
+	//$( "<textarea rows='4' cols='50'>Blah blah blah</textarea>" ).appendTo("#txtDiv");
     
     // Get context with jQuery - using jQuery's .get() method.
     var ctx = $("#myChart"+num).get(0).getContext("2d");
@@ -70,7 +74,7 @@ var sayThankYou = function (result, num) {
                     }
                }
                }
-               $('#the_body').html('Thank you for your input. This is what fellow students think about the matter.');
+               $('#the_body').html('Your vote has been cast. This is what fellow students think about the matter.');
                
                var data = [
                            {
