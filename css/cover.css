@@ -239,11 +239,11 @@ body {
 }
 
 .subtitle{
-	font-size: 13px;
+	font-size: 14px;
 }
 
 @media (min-width:768px) {
-    .lead {
+    .subtitle {
         font-size: 18px
     }
 }
