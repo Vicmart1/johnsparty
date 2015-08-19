@@ -2,6 +2,25 @@ var questions = 0;
 var left_buttons = new Array;
 var right_buttons = new Array;
 
+function componentFromStr(numStr, percent) {
+    var num = Math.max(0, parseInt(numStr, 10));
+    return percent ?
+        Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
+}
+
+function rgbToHex(rgb) {
+    var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+    var result, r, g, b, hex = "";
+    if ( (result = rgbRegex.exec(rgb)) ) {
+        r = componentFromStr(result[1], result[2]);
+        g = componentFromStr(result[3], result[4]);
+        b = componentFromStr(result[5], result[6]);
+
+        hex = (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+    return hex;
+}
+
 var createElement = function (element, where) {
     $( element ).appendTo( where );
 }
@@ -28,10 +47,19 @@ var sayThankYou = function (result, num) {
     //$('#the_body').removeClass('animated fadeOut');
     $('#the_header').addClass('animated fadeIn');
     $('#the_body').addClass('animated fadeIn');
-    $('#right_button'+num).remove();
+	
+	var left_text = $('#left_button'+num).html();
+	var right_text = $('#right_button'+num).html();
+	
+	var left_color = $('#left_button'+num).css('background-color');
+	//left_color = left_color.substring(4, left_color.length-1).replace(/ /g, '').split(',');
+	//var left_color2 = rgbToHex(left_color[0], left_color[1], left_color[2]);
+	left_color = rgbToHex(left_color);
+	
+	$('#right_button'+num).remove();
 	$('#left_button'+num).remove();
+	
     //$('#left_button'+num).html('Refresh Page');
-
 	
     var TestObject = Parse.Object.extend("Result"+num);
     var testObject = new TestObject();
@@ -39,11 +67,58 @@ var sayThankYou = function (result, num) {
     
 	var radius = 0;
 	radius = Math.max(parseInt($(".cover-container").css("width")), parseInt($(".cover-container").css("height")))/2;
+	
+    $("<canvas id='myChart"+num+"' width='" + radius + "' height='" + radius + "'></canvas>").appendTo( "#container"+num );
+    createElement("<p class='lead' id='question"+questions+"text'>Why did you pick " + ((result == 1) ? left_text.toLowerCase() : right_text.toLowerCase()) + "?</br>Defend your argument.</p>","#cover");
+    createElement("<p class='lead' id='container"+questions+"text'></p>","#cover");
+	$("<div class='textarea alpha60' id='typebox' contenteditable>Type here.</div>").appendTo( "#container"+num+"text" );
+	$("<a href='#' class='btn btn-lg btn-default left' id='submit' style='background-color:#FFF; margin: 20px;' >Submit</a>").appendTo( "#container"+num+"text" );
 
-    $( "<canvas id='myChart"+num+"' width='" + radius + "' height='" + radius + "'></canvas>" ).appendTo( "#container"+num );
-    $( "<div class='textarea alpha60' contenteditable>I look like a textarea</div>" ).appendTo( "#container"+num );
-    //$( "<div class='text-bg'></div>" ).appendTo( "#txtDiv" );
-	//$( "<textarea rows='4' cols='50'>Blah blah blah</textarea>" ).appendTo("#txtDiv");
+	$(document).on('click','#submit', function() {
+	    var TestObject = Parse.Object.extend("Tweets" + num);
+	    var testObject = new TestObject();
+	    testObject.save({tweet: String($("#typebox").text()), Score: result}).then(function(object) { });
+		
+		$("#typebox").remove();
+		$("#submit").remove();
+		$("#question"+questions+"text").html("Other people's responses are below.")
+	    var tweets = Parse.Object.extend("Tweets" + num);
+	    var query = new Parse.Query(tweets);
+	    query.limit(1000);
+
+		$("<div class='tweeter' id='tweeter'></div>").appendTo( "#container"+num+"text" );
+		
+		var now = new Date();
+		
+	    query.find({
+	    	success: function(results) {
+	        	for (var i = 0; i < results.length; i++) {
+	            	var object = results[i];
+	               	if(object.get('tweet') && object.get('Score')) {
+						var seconds = (now.getTime() - object.createdAt.getTime())/1000;
+						var timestamp = " ";
+						if(seconds < 60) {
+							timestamp = parseInt(seconds) + "s ago";
+						} else if (seconds/60 < 60) {
+							timestamp = parseInt(seconds/60) + "m ago";
+						} else if (seconds/3600 < 24) {
+							timestamp = parseInt(seconds/3600) + "h ago";
+						} else if (seconds/(3600 * 24) < 7) {
+							timestamp = parseInt(seconds/(3600 * 24)) + "d ago";
+						} else if (seconds/(3600 * 24 * 7) < 52){
+							timestamp = parseInt(seconds/(3600 * 24 * 7)) + "w ago";
+						} else if (seconds/(3600 * 24 * 7 * 52)){
+							timestamp = parseInt(seconds/(3600 * 24 * 7 * 52)) + "y ago";
+						}
+	                    $("<div class='tweet' id='tweet" + i + "'> <b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>").appendTo( "#tweeter" );
+	               	}
+	            }
+	        },
+	        error: function(error) {
+	               alert("Error: " + error.code + " " + error.message);
+	        }
+	    });
+	});
     
     // Get context with jQuery - using jQuery's .get() method.
     var ctx = $("#myChart"+num).get(0).getContext("2d");
@@ -52,7 +127,7 @@ var sayThankYou = function (result, num) {
     
     
     var GameScore = Parse.Object.extend("Result"+num);
-    var query = new Parse.Query(GameScore);
+    query = new Parse.Query(GameScore);
     query.limit(1000);
     //query.equalTo("playerName", "Dan Stemkoski");
     var left = 0;
@@ -81,13 +156,13 @@ var sayThankYou = function (result, num) {
                            value: right,
                            color: "#E0E0E0",
                            highlight: "#FFFFFF",
-                           label: "Right Shark"
+                           label: right_text
                            },
                            {
                            value: left,
-                           color:"#66B2FF",
-                           highlight: "#3399FF",
-                           label: "Left Shark"
+                           color: left_color,
+                           highlight: "#000",
+                           label: left_text
                            }
                            ]
                // For a pie chart
@@ -105,18 +180,19 @@ var sayThankYou = function (result, num) {
         //                });
 }
 
-var createPrompt = function(question, answer1, answer2) {
-                  questions++;
-                  createElement("<p class='lead' id='question"+questions+"'>"+question+"</p>","#cover");
-                  createElement("<p class='lead' id='container"+questions+"'></p>","#cover");
-                  left_buttons.push("<a href='#' class='btn btn-lg btn-default left' id='left_button"+questions+"'>"+answer1+"</a>");
-                  right_buttons.push("<a href='#' class='btn btn-lg btn-default right' id='right_button"+questions+"'>"+answer2+"</a>");
-                  createButton(left_buttons[questions-1],"#container"+questions, 1, questions);
-                  createButton(right_buttons[questions-1],"#container"+questions, 2, questions);
+
+var createPrompt = function(question, answer1, answer2, color1, color2) {
+	questions++;
+	createElement("<p class='lead' id='question"+questions+"'>"+question+"</p>","#cover");
+	createElement("<p class='lead' id='container"+questions+"'></p>","#cover");
+	left_buttons.push("<a href='#' class='btn btn-lg btn-default left' id='left_button"+questions+"' style='background-color:" + color1 + "' >"+answer1+"</a>");
+	right_buttons.push("<a href='#' class='btn btn-lg btn-default right' id='right_button"+questions+"'>"+answer2+"</a>");
+	createButton(left_buttons[questions-1],"#container"+questions, 1, questions);
+	createButton(right_buttons[questions-1],"#container"+questions, 2, questions);
 
 }
 
 $(document).ready(function() {
-                  Parse.initialize("88lDbflAf4cF2dTqDwFHkv6N6EG6WtDXY0YVT2lR", "YIPG0FJNlDrGcG5EaKdXHe74xQNGASrem08Pr6to");
-                  createPrompt("Are you a left shark or right shark?", "Left Shark", "Right Shark");
+	Parse.initialize("88lDbflAf4cF2dTqDwFHkv6N6EG6WtDXY0YVT2lR", "YIPG0FJNlDrGcG5EaKdXHe74xQNGASrem08Pr6to");
+	createPrompt("Are you a left shark or right shark?", "Left Shark", "Right Shark", "#66B2FF", "#E0E0E0");
 });
