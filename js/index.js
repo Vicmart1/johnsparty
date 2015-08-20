@@ -52,9 +52,12 @@ var sayThankYou = function (result, num) {
 	var right_text = $('#right_button'+num).html();
 	
 	var left_color = $('#left_button'+num).css('background-color');
+	var right_color = $('#right_button'+num).css('background-color');
+	
 	//left_color = left_color.substring(4, left_color.length-1).replace(/ /g, '').split(',');
 	//var left_color2 = rgbToHex(left_color[0], left_color[1], left_color[2]);
 	left_color = rgbToHex(left_color);
+	right_color = rgbToHex(right_color);
 	
 	$('#right_button'+num).remove();
 	$('#left_button'+num).remove();
@@ -79,8 +82,8 @@ var sayThankYou = function (result, num) {
 	    var testObject = new TestObject();
 	    testObject.save({tweet: String($("#typebox").text()), Score: result}).then(function(object) { });
 		
-		$("#typebox").remove();
-		$("#submit").remove();
+		var scroll = $(window).scrollTop();
+	
 		$("#question"+questions+"text").html("Other people's responses are below.")
 	    var tweets = Parse.Object.extend("Tweets" + num);
 	    var query = new Parse.Query(tweets);
@@ -110,7 +113,7 @@ var sayThankYou = function (result, num) {
 						} else if (seconds/(3600 * 24 * 7 * 52)){
 							timestamp = parseInt(seconds/(3600 * 24 * 7 * 52)) + "y ago";
 						}
-	                    $("<div class='tweet' id='tweet" + i + "'> <b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>").appendTo( "#tweeter" );
+	                    $("<div class='icon-holder'><div class='icon' style='background-color: #" + ((object.get("Score") == 1) ? left_color : right_color) + "'></div></div><div class='tweet' id='tweet" + i + "'><b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>").appendTo( "#tweeter" );
 	               	}
 	            }
 	        },
@@ -118,6 +121,10 @@ var sayThankYou = function (result, num) {
 	               alert("Error: " + error.code + " " + error.message);
 	        }
 	    });
+		console.log(scroll);
+		$(window).scrollTop(scroll);
+		$("#typebox").remove();
+		$("#submit").remove();
 	});
     
     // Get context with jQuery - using jQuery's .get() method.

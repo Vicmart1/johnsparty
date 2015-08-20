@@ -257,3 +257,17 @@ body {
         font-size: 18px
     }
 }
+
+.icon{
+	width: 0.75em;
+	padding-bottom: 0.75em;
+	border-radius: 0.1875em;
+	float: right;
+	margin: 0.3em;
+	margin-bottom: 0em;
+}
+
+.icon-holder{
+	width: 12.5%;
+	float: left;
+}
