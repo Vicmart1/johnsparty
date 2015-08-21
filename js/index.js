@@ -1,6 +1,8 @@
 var questions = 0;
 var left_buttons = new Array;
 var right_buttons = new Array;
+var timeout = null;
+var last_update;
 
 function componentFromStr(numStr, percent) {
     var num = Math.max(0, parseInt(numStr, 10));
@@ -19,6 +21,56 @@ function rgbToHex(rgb) {
         hex = (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
     return hex;
+}
+
+function updateTweets(num, left_color, right_color, left_text, right_text) {
+    var tweets = Parse.Object.extend("Tweets" + num);
+    var query = new Parse.Query(tweets);
+    query.limit(1000);
+
+	var now = new Date();
+	
+    query.find({
+    	success: function(results) {
+			var counter = -1;
+        	for (var i = results.length - 1; i >= 0; i--) {
+            	var object = results[i];
+				if(object.createdAt.getTime() > last_update) {
+	               	if(object.get('tweet') && object.get('Score')) {
+						var seconds = (now.getTime() - object.createdAt.getTime())/1000;
+						var timestamp = " ";
+						if(seconds < 60) {
+							timestamp = parseInt(seconds) + "s ago";
+						} else if (seconds/60 < 60) {
+							timestamp = parseInt(seconds/60) + "m ago";
+						} else if (seconds/3600 < 24) {
+							timestamp = parseInt(seconds/3600) + "h ago";
+						} else if (seconds/(3600 * 24) < 7) {
+							timestamp = parseInt(seconds/(3600 * 24)) + "d ago";
+						} else if (seconds/(3600 * 24 * 7) < 52){
+							timestamp = parseInt(seconds/(3600 * 24 * 7)) + "w ago";
+						} else if (seconds/(3600 * 24 * 7 * 52)){
+							timestamp = parseInt(seconds/(3600 * 24 * 7 * 52)) + "y ago";
+						}
+						if(counter != -1) {
+							$($(".tweet").get(counter)).after("<div class='icon-holder'><div class='icon' style='background-color: #" + ((object.get("Score") == 1) ? left_color : right_color) + "'></div></div><div class='tweet'><b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>");
+						} else {
+							$(".tweeter").prepend("<div class='icon-holder'><div class='icon' style='background-color: #" + ((object.get("Score") == 1) ? left_color : right_color) + "'></div></div><div class='tweet'><b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>");
+						}
+						counter++;
+					}
+				} else {
+					break;
+				}
+            }
+			last_update = now.getTime();
+        },
+        error: function(error) {
+               alert("Error: " + error.code + " " + error.message);
+        }
+    });
+	
+	timeout = window.setTimeout(updateTweets, 10000, num, left_color, right_color, left_text, right_text);
 }
 
 var createElement = function (element, where) {
@@ -72,7 +124,7 @@ var sayThankYou = function (result, num) {
 	radius = Math.max(parseInt($(".cover-container").css("width")), parseInt($(".cover-container").css("height")))/2;
 	
     $("<canvas id='myChart"+num+"' width='" + radius + "' height='" + radius + "'></canvas>").appendTo( "#container"+num );
-    createElement("<p class='lead' id='question"+questions+"text'>Why did you pick " + ((result == 1) ? left_text.toLowerCase() : right_text.toLowerCase()) + "?</br>Defend your argument.</p>","#cover");
+    createElement("<p class='lead' id='question"+questions+"text'>Join the debate!</br>Write why did you picked the " + ((result == 1) ? left_text.toLowerCase() : right_text.toLowerCase()) + " party to represent you.</p>","#cover");
     createElement("<p class='lead' id='container"+questions+"text'></p>","#cover");
 	$("<div class='textarea alpha60' id='typebox' contenteditable>Type here.</div>").appendTo( "#container"+num+"text" );
 	$("<a href='#' class='btn btn-lg btn-default left' id='submit' style='background-color:#FFF; margin: 20px;' >Submit</a>").appendTo( "#container"+num+"text" );
@@ -84,18 +136,19 @@ var sayThankYou = function (result, num) {
 		
 		var scroll = $(window).scrollTop();
 	
-		$("#question"+questions+"text").html("Other people's responses are below.")
+		$("#question"+questions+"text").html("Other people's responses are below.");
+		$("<div class='tweeter' id='tweeter'></div>").appendTo( "#container"+num+"text" );
+		
 	    var tweets = Parse.Object.extend("Tweets" + num);
 	    var query = new Parse.Query(tweets);
 	    query.limit(1000);
 
-		$("<div class='tweeter' id='tweeter'></div>").appendTo( "#container"+num+"text" );
 		
 		var now = new Date();
 		
 	    query.find({
 	    	success: function(results) {
-	        	for (var i = 0; i < results.length; i++) {
+	        	for (var i = results.length - 1; i >= 0; i--) {
 	            	var object = results[i];
 	               	if(object.get('tweet') && object.get('Score')) {
 						var seconds = (now.getTime() - object.createdAt.getTime())/1000;
@@ -116,15 +169,18 @@ var sayThankYou = function (result, num) {
 	                    $("<div class='icon-holder'><div class='icon' style='background-color: #" + ((object.get("Score") == 1) ? left_color : right_color) + "'></div></div><div class='tweet' id='tweet" + i + "'><b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>").appendTo( "#tweeter" );
 	               	}
 	            }
+				
+				last_update = now.getTime();
 	        },
 	        error: function(error) {
 	               alert("Error: " + error.code + " " + error.message);
 	        }
 	    });
-		console.log(scroll);
+
 		$(window).scrollTop(scroll);
 		$("#typebox").remove();
 		$("#submit").remove();
+		timeout = window.setTimeout(updateTweets, 1000, num, left_color, right_color, left_text, right_text);
 	});
     
     // Get context with jQuery - using jQuery's .get() method.
@@ -156,7 +212,7 @@ var sayThankYou = function (result, num) {
                     }
                }
                }
-               $('#the_body').html('Your vote has been cast. This is what fellow students think about the matter.');
+               $('#the_body').html('Your vote has been cast. This is what other students think about the matter.');
                
                var data = [
                            {
