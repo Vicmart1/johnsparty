@@ -68,7 +68,7 @@ function updateTweets(num, left_color, right_color, left_text, right_text) {
 			for(var i = 0; i < $(".tweet").get().length; i++) {
 				tweet = $($($(".tweet").get(i)).find(".subtitle")[0]);
 				var age = parseInt($(tweet).text().substring(0, 2));
-				switch($(tweet).text().substring(0, 2))
+				//switch($(tweet).text().substring(0, 2))
 				$(tweet).text(age);
 			}
 			last_update = now.getTime();
