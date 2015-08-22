@@ -3,6 +3,7 @@ var left_buttons = new Array;
 var right_buttons = new Array;
 var timeout = null;
 var last_update;
+var update_freq = 3000;
 
 function componentFromStr(numStr, percent) {
     var num = Math.max(0, parseInt(numStr, 10));
@@ -63,14 +64,21 @@ function updateTweets(num, left_color, right_color, left_text, right_text) {
 					break;
 				}
             }
+			var tweet = null;
+			for(var i = 0; i < $(".tweet").get().length; i++) {
+				tweet = $($($(".tweet").get(i)).find(".subtitle")[0]);
+				var age = parseInt($(tweet).text().substring(0, 2));
+				switch($(tweet).text().substring(0, 2))
+				$(tweet).text(age);
+			}
 			last_update = now.getTime();
         },
         error: function(error) {
-               alert("Error: " + error.code + " " + error.message);
+               //alert("Error: " + error.code + " " + error.message);
         }
     });
 	
-	timeout = window.setTimeout(updateTweets, 10000, num, left_color, right_color, left_text, right_text);
+	timeout = window.setTimeout(updateTweets, update_freq, num, left_color, right_color, left_text, right_text);
 }
 
 var createElement = function (element, where) {
@@ -173,14 +181,14 @@ var sayThankYou = function (result, num) {
 				last_update = now.getTime();
 	        },
 	        error: function(error) {
-	               alert("Error: " + error.code + " " + error.message);
+	               //alert("Error: " + error.code + " " + error.message);
 	        }
 	    });
 
 		$(window).scrollTop(scroll);
 		$("#typebox").remove();
 		$("#submit").remove();
-		timeout = window.setTimeout(updateTweets, 1000, num, left_color, right_color, left_text, right_text);
+		timeout = window.setTimeout(updateTweets, update_freq, num, left_color, right_color, left_text, right_text);
 	});
     
     // Get context with jQuery - using jQuery's .get() method.
