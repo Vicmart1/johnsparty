@@ -246,6 +246,7 @@ body {
 	width: 75%;
 	border-bottom: 1px solid white;
 	text-align: left;
+	transition: all 1s;
 }
 
 .subtitle{

@@ -3,7 +3,7 @@ var left_buttons = new Array;
 var right_buttons = new Array;
 var timeout = null;
 var last_update;
-var update_freq = 3000;
+var update_freq = 5000;
 
 function componentFromStr(numStr, percent) {
     var num = Math.max(0, parseInt(numStr, 10));
@@ -34,43 +34,40 @@ function updateTweets(num, left_color, right_color, left_text, right_text) {
     query.find({
     	success: function(results) {
 			var counter = -1;
+			var tweet = null;
+			var object = null;
         	for (var i = results.length - 1; i >= 0; i--) {
-            	var object = results[i];
-				if(object.createdAt.getTime() > last_update) {
-	               	if(object.get('tweet') && object.get('Score')) {
-						var seconds = (now.getTime() - object.createdAt.getTime())/1000;
-						var timestamp = " ";
-						if(seconds < 60) {
-							timestamp = parseInt(seconds) + "s ago";
-						} else if (seconds/60 < 60) {
-							timestamp = parseInt(seconds/60) + "m ago";
-						} else if (seconds/3600 < 24) {
-							timestamp = parseInt(seconds/3600) + "h ago";
-						} else if (seconds/(3600 * 24) < 7) {
-							timestamp = parseInt(seconds/(3600 * 24)) + "d ago";
-						} else if (seconds/(3600 * 24 * 7) < 52){
-							timestamp = parseInt(seconds/(3600 * 24 * 7)) + "w ago";
-						} else if (seconds/(3600 * 24 * 7 * 52)){
-							timestamp = parseInt(seconds/(3600 * 24 * 7 * 52)) + "y ago";
-						}
+             	object = results[i];
+	            if(object.get('tweet') && object.get('Score')) {
+					var seconds = (now.getTime() - object.createdAt.getTime())/1000;
+					var timestamp = " ";
+					if(seconds < 60) {
+						timestamp = parseInt(seconds) + "s ago";
+					} else if (seconds/60 < 60) {
+						timestamp = parseInt(seconds/60) + "m ago";
+					} else if (seconds/3600 < 24) {
+						timestamp = parseInt(seconds/3600) + "h ago";
+					} else if (seconds/(3600 * 24) < 7) {
+						timestamp = parseInt(seconds/(3600 * 24)) + "d ago";
+					} else if (seconds/(3600 * 24 * 7) < 52){
+						timestamp = parseInt(seconds/(3600 * 24 * 7)) + "w ago";
+					} else if (seconds/(3600 * 24 * 7 * 52)){
+						timestamp = parseInt(seconds/(3600 * 24 * 7 * 52)) + "y ago";
+					}
+					if(object.createdAt.getTime() > last_update) {
 						if(counter != -1) {
 							$($(".tweet").get(counter)).after("<div class='icon-holder'><div class='icon' style='background-color: #" + ((object.get("Score") == 1) ? left_color : right_color) + "'></div></div><div class='tweet'><b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>");
 						} else {
 							$(".tweeter").prepend("<div class='icon-holder'><div class='icon' style='background-color: #" + ((object.get("Score") == 1) ? left_color : right_color) + "'></div></div><div class='tweet'><b>" + ((object.get("Score") == 1) ? left_text : right_text) + "</b> <span class='subtitle'>" + timestamp + "</span></br> <span class='subtitle'>" + object.get('tweet') + "</span></div>");
 						}
+
 						counter++;
+					} else {
+						tweet = $($($(".tweet").get(results.length - 1 - i)).find(".subtitle")[0]);
+						$(tweet).text(timestamp);
 					}
-				} else {
-					break;
 				}
             }
-			var tweet = null;
-			for(var i = 0; i < $(".tweet").get().length; i++) {
-				tweet = $($($(".tweet").get(i)).find(".subtitle")[0]);
-				var age = parseInt($(tweet).text().substring(0, 2));
-				//switch($(tweet).text().substring(0, 2))
-				$(tweet).text(age);
-			}
 			last_update = now.getTime();
         },
         error: function(error) {
