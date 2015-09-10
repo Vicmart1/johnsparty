@@ -76,6 +76,59 @@ $( document ).ready(function() {
 				}
 			});
 			
+			$("body").on("mousedown", ".box-cont", function(e){
+				if(!$(this).hasClass("inactive")) {
+					factor = 0.9;
+					var x = $(this).attr('id').split("-")[0];
+					var y = $(this).attr('id').split("-")[1];
+					if(array_data[y][x] == 2) {
+						factor = 3.0;
+						$(".description").css("width", ((box_width * factor + 20) * 4 + 30) + "px");
+						$(".description").css("height", ((box_width * factor + 20) * 3 + 20) + "px");
+						$(".description").css("left", (((box_width + 10) * x + box_width + 10) + (box_width * (factor - 1)/2) + 10) + "px");
+						$(".description").css("top", (((box_width + 10) * y) - (box_width * (factor - 1)/2) - 10) + "px");		
+						$(".description").css("opacity", 1);	
+						$(".description").css("transition-delay", "0.25s");	
+						$(".description").css("transition-duration", "0.25s");	
+						/**$(".active").each(function( index ) {
+							$(this).css("z-index", "0");
+						});
+						$(this).css("z-index", "2");
+						**/
+						//$(this).css("z-index", 4);							
+						//$(".description").css("z-index", 3);							
+					}
+					
+					$(this).css("width", (box_width * factor + 20) + "px");
+					$(this).css("padding-bottom", (box_width * factor + 20) + "px");
+					$(this).css("left", (((box_width + 10) * x) - (box_width * (factor - 1)/2) - 10) + "px");
+					$(this).css("top", (((box_width + 10) * y) - (box_width * (factor - 1)/2) - 10) + "px");				
+					$(this).children().css("opacity", "1");
+					$(this).children().css("transition-delay", "0.4s");
+					$(".paragraph").css("transition-delay", "0.5s");
+					$(".paragraph").css("opacity", 1);
+					/**for(k = -2; k <= 2; k++) {
+						for(l = -2; l <=2; l++) {
+							//console.log(k);
+							//console.log("#" + (1.0 * x + k) + "-" + y);
+							if(k == 0 && l == 0) {
+								l++
+							}
+							var neg = 1;
+							var negl = 1;
+							if (k > 0) {
+								neg = -1;
+							}
+							if (l > 0) {
+								negl = -1;
+							}
+							$("#" + (1.0 * x + k) + "-" + (1.0 * y + l)).css("left", (((box_width + 10) * (1.0 * x + k)) + (box_width/k) - (5 * neg)) + "px");
+							$("#" + (1.0 * x + k) + "-" + (1.0 * y + l)).css("top", (((box_width + 10) * (1.0 * y + l)) + (box_width/l) - (5 * negl)) + "px");
+						}
+					}**/
+				}
+			});
+			
 			$("body").on("mouseout", ".box-cont", function(e){
 				if(!$(this).hasClass("inactive")) {
 					$(this).css("width", (box_width) + "px");
