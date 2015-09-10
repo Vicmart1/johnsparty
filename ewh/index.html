@@ -1,0 +1,84 @@
+<html>
+	<head>
+    	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	    <style>
+			@font-face {
+		    	font-family: Raleway-Med;
+		    	src: url(Stylesheets/Raleway-Medium.ttf);
+			}
+			
+		    html, body{
+				margin: 0px;
+				padding: 0px;
+				overflow-y: hidden;
+			}
+
+			.box-cont{
+				position: absolute;
+				margin: 10px;
+				margin-top: 0px;
+				margin-left: 0px;
+				background-color: green;
+				transition: all 0.5s ease;
+				color: white;
+				-webkit-transform: translate3d(0, 0, 0);
+			}
+			
+			.inactive{
+				background-color: #EEE;	
+				z-index: -1;
+			}
+			
+			.active{
+				background-color: #33CCFF;
+				z-index: 2;
+			}
+			
+			p{
+				font-family: Raleway-Med;
+				-webkit-touch-callout: none;
+			    -webkit-user-select: none;
+			    -khtml-user-select: none;
+			    -moz-user-select: none;
+			    -ms-user-select: none;
+			    user-select: none;
+				cursor:default;
+			}
+			
+			.title{
+				position: absolute;
+				top: calc(100% - 85px);
+				margin: 5px;
+				transition: all 0.1s ease 0.4s;
+				opacity: 0;
+			}
+			
+			.description{
+				position: absolute;
+				width: 0px;
+				height: 0px;
+				left: 0px;
+				top: 0px;
+				background-color: gray;
+				z-index: 3;
+				opacity: 0;
+				transition: all 0.25s ease 0.25s;
+				-webkit-transform: translate3d(0, 0, 0);
+				color: white;
+				font-family: Raleway-Med;
+				overflow: hidden;
+			}
+			
+			.paragraph{
+				position: absolute;
+				margin: 5px;
+				opacity: 0;
+				transition: all 0.05s ease 0.5s;
+			}
+		</style>
+	</head>
+	<body>
+  		<script src="Javascripts/squares.js"></script>
+		<div class="description"><p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>
+	</body>
+</html>
