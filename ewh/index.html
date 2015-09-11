@@ -18,6 +18,8 @@
 				margin: 10px;
 				margin-top: 0px;
 				margin-left: 0px;
+				left: 0px;
+				top: 0px;
 				background-color: green;
 				transition: all 0.5s ease;
 				color: white;
@@ -34,6 +36,14 @@
 				z-index: 2;
 			}
 			
+			.letter{
+				background-color: #09F;
+			}
+			
+			.letter-black{
+				background-color: #000;
+			}
+			
 			p{
 				font-family: Raleway-Med;
 				-webkit-touch-callout: none;
@@ -47,7 +57,8 @@
 			
 			.title{
 				position: absolute;
-				top: calc(100% - 85px);
+				width: 95%;
+				height: 100%;
 				margin: 5px;
 				transition: all 0.1s ease 0.4s;
 				opacity: 0;
@@ -66,7 +77,7 @@
 				-webkit-transform: translate3d(0, 0, 0);
 				color: white;
 				font-family: Raleway-Med;
-				overflow: hidden;
+				overflow: scroll;
 			}
 			
 			.paragraph{
@@ -75,10 +86,43 @@
 				opacity: 0;
 				transition: all 0.05s ease 0.5s;
 			}
+			
+			.notifbar{
+				position: fixed;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				height: 1em;
+				background-color: white;
+				border-bottom: 1px solid black;
+				z-index: 5;
+				font-family: Raleway-Med;
+				font-size: 1.5em;
+				padding: 5px;
+				padding-top: 0px;
+			}
+			
+			.header{
+				position: absolute;
+				top: 0px;
+				width: calc(100% - 20px);
+				margin-top: 0px;
+			}
+			
+			.right-para{
+				text-align: right;
+			}
 		</style>
 	</head>
 	<body>
   		<script src="Javascripts/squares.js"></script>
-		<div class="description"><p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>
+		<div class="notifbar">
+			<p class="header left-para">
+				<span class="ewh" style='color: #33CCFF'>EngineeringWorldHealth</span>|JohnsHopkinsUniversity
+			</p>
+			<p class="header right-para">
+				<a href="google.com">Apply to a Design Team</a>
+			</p>
+		</div>
 	</body>
 </html>
