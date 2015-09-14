@@ -49,7 +49,35 @@ $( document ).ready(function() {
 				$(box_cont).addClass("letter-black");
 			}
 			
-			$("body").on("mousedown", ".box-cont", function(e){
+			$("body").on("mouseover", ".box-cont", function(e){
+				if(!$(this).hasClass("inactive")) {
+					factor = 0.9;
+					var x = $(this).attr('id').split("-")[0];
+					var y = $(this).attr('id').split("-")[1];
+					if(array_data[y][x] == 2) {
+						factor = 3.0;
+						var id = "#desp" + des_loc[y][x];
+						$(id).css("width", ((box_width * factor + 20) * 4 + 30) + "px");
+						$(id).css("height", ((box_width * factor + 20) * 3 + 20) + "px");
+						$(id).css("left", (((box_width + 10) * x + box_width + 10) + (box_width * (factor - 1)/2) + 10) + "px");
+						$(id).css("top", (((box_width + 10) * y) - (box_width * (factor - 1)/2) - 10) + "px");		
+						$(id).css("opacity", 1);	
+						$(id).css("transition-delay", "0.25s");	
+						$(id).css("transition-duration", "0.25s");								
+					}
+					
+					$(this).css("width", (box_width * factor + 20) + "px");
+					$(this).css("padding-bottom", (box_width * factor + 20) + "px");
+					$(this).css("left", (((box_width + 10) * x) - (box_width * (factor - 1)/2) - 10) + "px");
+					$(this).css("top", (((box_width + 10) * y) - (box_width * (factor - 1)/2) - 10) + "px");				
+					$(this).children().css("opacity", "1");
+					$(this).children().css("transition-delay", "0.4s");
+					$(".paragraph").css("transition-delay", "0.5s");
+					$(".paragraph").css("opacity", 1);
+				}
+			});
+			
+			$("body").on("touchstart", ".box-cont", function(e){
 				if(!$(this).hasClass("inactive")) {
 					factor = 0.9;
 					var x = $(this).attr('id').split("-")[0];
