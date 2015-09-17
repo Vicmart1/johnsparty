@@ -132,7 +132,7 @@ $( document ).ready(function() {
 							$(".description").css("transition-delay", "0.05s");
 							$(".description").css("transition-duration", "0.25s");								
 						}
-						jQuery.data($(this), "index", 1);
+						jQuery.data($(this), "index", -1);
 					}
 				}
 			});
